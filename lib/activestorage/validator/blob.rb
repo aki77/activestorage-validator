@@ -2,8 +2,6 @@ module ActiveRecord
   module Validations
     class BlobValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, values) # rubocop:disable Metrics/AbcSize
-        # NOTE: Rails 5.2.0 dose not support blank?
-        # https://github.com/rails/rails/commit/42259ce904eb2538761b32a793cbe390fb8272b7
         return unless values.attached?
 
         Array(values).each do |value|
