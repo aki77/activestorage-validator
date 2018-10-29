@@ -25,8 +25,8 @@ class User < ApplicationRecord
   has_one_attached :avatar
   has_many_attached :photos
 
-  validates :avatar, precence: true, blob: { content_type: :image }
-  validates :photos, precence: true, blob: { content_type: ['image/png', 'image/jpg', 'image/jpeg'], size_range: 1..5.megabytes }
+  validates :avatar, presence: true, blob: { content_type: :image }
+  validates :photos, presence: true, blob: { content_type: ['image/png', 'image/jpg', 'image/jpeg'], size_range: 1..5.megabytes }
 end
 ```
 
