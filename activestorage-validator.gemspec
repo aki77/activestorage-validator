@@ -5,7 +5,7 @@ require "activestorage/validator/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "activestorage-validator"
-  spec.version       = Activestorage::Validator::VERSION
+  spec.version       = ActiveStorage::Validator::VERSION
   spec.authors       = ["aki"]
   spec.email         = ["aki77@users.noreply.github.com"]
 

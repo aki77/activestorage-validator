@@ -7,7 +7,7 @@ ActiveStorage blob validator.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'activestorage-validator'
+gem 'activestorage-validator', '~> 0.1.1'
 ```
 
 And then execute:
@@ -16,7 +16,27 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install activestorage-validator
+    $ gem install activestorage-validator -v '~> 0.1.1'
+
+## Internationalizacion (I18n)
+
+There's no need to make any additional configuration into your Rails application to make the translations work. It's enough to configure `I18n.default_locale` or `I18n.available_locales` in your application. The following translation files are available at this moment:
+
+```ruby
+[en, es, es-NI]
+```
+
+**If your desired locale is not included yet**, you can temporally create a translation file `*.yml` inside your application's locales folder `app/config/locales/`. The locale structure goes like this:
+
+```ruby
+en:
+  activerecord:
+    errors:
+      messages:
+        content_type:   "is not a valid file format"
+        max_size_error: "is not within valid size range"
+        # ...and so on...
+```
 
 ## Usage
 
@@ -34,6 +54,8 @@ end
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/aki77/activestorage-validator. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+
+**CONTRIBUTORS:** Please feel free to add additional translation files into `app/config/locales` gem folder
 
 ## License
 

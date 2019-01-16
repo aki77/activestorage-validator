@@ -3,9 +3,10 @@ module ActiveStorage
     class Railtie < Rails::Railtie
       initializer 'activestorage-validator' do |app|
         ActiveStorage::Validator::Railtie.instance_eval do
+          # Get locale pattern to load only necessary locale files
           pattern = pattern_from app.config.i18n.available_locales
   
-          # Add aditional locale locations below this line
+          # Add locales from default folder
           add("app/config/locales/#{pattern}.yml")
         end
       end

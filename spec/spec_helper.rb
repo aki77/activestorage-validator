@@ -2,6 +2,7 @@ require "bundler/setup"
 require "dummy/application"
 require "activestorage/validator"
 require "support/blob_helper"
+require "support/locales_helper"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -14,5 +15,14 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  # THIS SECTION WAS ADDED DUE TO RAILTIE DOES NOT LOAD ON DUMMY-APPLICATIONS
+  # Include translations
+  config.before(:suite) do
+    # Load locale files
+    I18n.load_path.concat(LocalesHelper.locale_files)
+  end
+
+  # Inclussions
   config.include BlobHelper
+  config.include LocalesHelper
 end
