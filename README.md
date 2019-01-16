@@ -22,8 +22,8 @@ Or install it yourself as:
 
 There's no need to make any additional configuration into your Rails application to make the translations work. It's enough to configure `I18n.default_locale` or `I18n.available_locales` in your application. The following translation files are available at this moment:
 
-```ruby
-[en, es, es-NI]
+```
+en, es, es-NI
 ```
 
 **If your desired locale is not included yet**, you can temporally create a translation file `*.yml` inside your application's locales folder `app/config/locales/`. The locale structure goes like this:
