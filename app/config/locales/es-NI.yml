@@ -1,0 +1,6 @@
+es-NI:
+  activerecord:
+    errors:
+      messages:
+        content_type: "no es un formato de archivo válido"
+        max_size_error: "no está dentro del rango de tamaño de archivo válido"
