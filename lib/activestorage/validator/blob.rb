@@ -3,18 +3,26 @@ module ActiveRecord
     class BlobValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, values) # rubocop:disable Metrics/AbcSize
         return unless values.attached?
+        invalid_blob = false
 
         Array(values).each do |value|
           if options[:size_range].present?
             if options[:size_range].min > value.blob.byte_size
               record.errors.add(attribute, :min_size_error, min_size: ActiveSupport::NumberHelper.number_to_human_size(options[:size_range].min))
+              invalid_blob = true
             elsif options[:size_range].max < value.blob.byte_size
               record.errors.add(attribute, :max_size_error, max_size: ActiveSupport::NumberHelper.number_to_human_size(options[:size_range].max))
+              invalid_blob = true
             end
           end
 
           unless valid_content_type?(value.blob)
             record.errors.add(attribute, :content_type)
+            invalid_blob = true
+          end
+
+          if invalid_blob && options[:purge]
+            value.purge
           end
         end
       end
