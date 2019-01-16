@@ -1,3 +1,4 @@
+require 'activestorage/validator/railtie' if defined?(Rails)
 require 'activestorage/validator/blob'
 require 'activestorage/validator/version'
 

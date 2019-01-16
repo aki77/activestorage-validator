@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    errors:
+      messages:
+        content_type: "is not a valid file format"
+        max_size_error: "is not within valid size range"
