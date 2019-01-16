@@ -18,7 +18,7 @@ Or install it yourself as:
 
     $ gem install activestorage-validator -v '~> 0.1.1'
 
-## Internationalizacion (I18n)
+## Internationalization (I18n)
 
 There's no need to make any additional configuration into your Rails application to make the translations work. It's enough to configure `I18n.default_locale` or `I18n.available_locales` in your application. The following translation files are available at this moment:
 
@@ -55,7 +55,7 @@ end
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/aki77/activestorage-validator. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
-**CONTRIBUTORS:** Please feel free to add additional translation files into `app/config/locales` gem folder
+**CONTRIBUTORS:** Please feel free to make your pull request in order to add additional translation files into `app/config/locales` gem folder
 
 ## License
 
