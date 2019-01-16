@@ -22,7 +22,14 @@ module ActiveRecord
           end
 
           if invalid_blob && options[:purge]
-            value.purge
+            # Purge this record from file and from ActiveStorage::Blob database model
+            # This is made in a new thread in order to avoid current thead transaction rollbacks ActiveStorage::Blob purge
+            Thread.new do
+              ActiveRecord::Base.connection_pool.with_connection do
+                file_blob = ActiveStorage::Blob.find_signed(value.signed_id)
+                file_blob.purge
+              end
+            end
           end
         end
       end
