@@ -7,7 +7,11 @@ ActiveStorage blob validator.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'activestorage-validator', '~> 0.1.1'
+# Version pending to be uploaded to RubyGems.org
+# gem 'activestorage-validator', '~> 0.1.1'
+
+# From this fork 'mldoscar/activestorage-validator'
+gem 'activestorage-validator', git: 'https://github.com/mldoscar/activestorage-validator', branch: 'master'
 ```
 
 And then execute:
@@ -16,7 +20,8 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install activestorage-validator -v '~> 0.1.1'
+    $ # Version pending to be uploaded to RubyGems.org
+    $ # gem install activestorage-validator -v '~> 0.1.1'
 
 ## Internationalization (I18n)
 
