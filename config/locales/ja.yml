@@ -1,0 +1,7 @@
+ja:
+  activerecord:
+    errors:
+      messages:
+        content_type: "のファイル形式が不正です。"
+        min_size_error: "を%{max_size}以上のサイズにしてください。"
+        max_size_error: "を%{max_size}以下のサイズにしてください。"

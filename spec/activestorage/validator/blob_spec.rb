@@ -35,6 +35,12 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
     context '1.4MB' do
       it { expect(User.new(file: create_file_blob(filename: '1_4MB.jpg')).valid?).to eq false }
       it { expect(User.new(files: [create_file_blob(filename: '1_4MB.jpg')]).valid?).to eq false }
+
+      it "should translate the validation error according to it's locale" do
+        user = User.new(file: create_file_blob(filename: '1_4MB.jpg'))
+        user.validate
+        expect(user.errors.messages[:file][0]).to eq 'File size should be less than 1 MB'
+      end
     end
   end
 
@@ -92,4 +98,3 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
     end
   end
 end
-
