@@ -1,3 +1,7 @@
+## 0.1.3
+
+- Update dependency
+
 ## 0.1.2
 
 - Fix typo
