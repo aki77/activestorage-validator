@@ -1,3 +1,7 @@
+## [Unreleased]
+
+- Updated test environment to rails 6.0.0
+
 ## 0.1.3
 
 - Update dependency

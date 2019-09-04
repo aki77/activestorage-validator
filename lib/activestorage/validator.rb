@@ -1,5 +1,8 @@
-require 'activestorage/validator/blob'
 require 'activestorage/validator/version'
+
+ActiveSupport.on_load(:active_record) do
+  require 'activestorage/validator/blob'
+end
 
 module ActiveStorage
   # https://github.com/rails/rails/commit/42259ce904eb2538761b32a793cbe390fb8272b7
