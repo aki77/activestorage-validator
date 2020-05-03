@@ -1,3 +1,6 @@
+[![Gem Version](https://badge.fury.io/rb/activestorage-validator.svg)](https://rubygems.org/gems/activestorage-validator)
+[![Build](https://github.com/aki77/activestorage-validator/workflows/Build/badge.svg)](https://github.com/aki77/activestorage-validator/actions)
+
 # ActiveStorage Validator
 
 ActiveStorage blob validator.
