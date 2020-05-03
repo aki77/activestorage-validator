@@ -24,8 +24,8 @@ jobs:
       matrix:
         ruby: [2.6, 2.7]
         gemfile: [
-          "gemfiles/52.gemfile",
-          "gemfiles/60.gemfile",
+          "gemfiles/rails52.gemfile",
+          "gemfiles/rails60.gemfile",
         ]
     steps:
     - name: Install packages
