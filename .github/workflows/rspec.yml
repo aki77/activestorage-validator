@@ -23,6 +23,10 @@ jobs:
       fail-fast: false
       matrix:
         ruby: [2.6, 2.7]
+        gemfile: [
+          "gemfiles/52.gemfile",
+          "gemfiles/60.gemfile",
+        ]
     steps:
     - name: Install packages
       run: |
@@ -32,9 +36,9 @@ jobs:
     - uses: actions/cache@v1
       with:
         path: /home/runner/bundle
-        key: bundle-${{ matrix.ruby }}-${{ hashFiles('**/*.gemspec') }}
+        key: bundle-${{ matrix.ruby }}-${{ matrix.gemfile }}-${{ hashFiles(matrix.gemfile) }}-${{ hashFiles('**/*.gemspec') }}
         restore-keys: |
-          bundle-${{ matrix.ruby }}-
+          bundle-${{ matrix.ruby }}-${{ matrix.gemfile }}-
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -42,6 +46,7 @@ jobs:
     - name: Install dependencies
       run: |
         bundle config path /home/runner/bundle
+        bundle config --global gemfile ${{ matrix.gemfile }}
         bundle install
         bundle update
         bundle clean
