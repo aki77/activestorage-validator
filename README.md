@@ -34,6 +34,8 @@ class User < ApplicationRecord
 end
 ```
 
+Note: For `has_many_attached`, size is validated on each file individually. In the code above, `:photos` validation allows any number of photos to be uploadd, each one being 5 MB or less in size.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/aki77/activestorage-validator. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
