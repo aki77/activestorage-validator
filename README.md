@@ -34,7 +34,7 @@ class User < ApplicationRecord
 end
 ```
 
-Note: For `has_many_attached`, size is validated on each file individually. In the code above, `:photos` validation allows any number of photos to be uploadd, each one being 5 MB or less in size.
+Note: For `has_many_attached`, size is validated on each file individually. In the code above, `:photos` validation allows any number of photos to be upload, each one being 5 MB or less in size.
 
 ## Contributing
 
