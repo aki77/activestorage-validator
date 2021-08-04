@@ -1,6 +1,9 @@
 ## [Unreleased]
 
+## 0.1.4
+
 - Updated test environment to rails 6.0.0
+- Add pt-br locale (#22)
 
 ## 0.1.3
 
