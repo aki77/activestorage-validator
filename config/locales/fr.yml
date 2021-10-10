@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    errors:
+      messages:
+        content_type: "n'est pas un format de fichier valide"
+        min_size_error: "La taille du fichier doit être supérieure à %{min_size}"
+        max_size_error: "La taille du fichier doit être inférieure à %{max_size}"
