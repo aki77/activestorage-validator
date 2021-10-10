@@ -33,8 +33,23 @@ class User < ApplicationRecord
   # validates :photos, presence: true, blob: { content_type: %r{^image/}, size_range: 1..5.megabytes }
 end
 ```
-
 Note: For `has_many_attached`, size is validated on each file individually. In the code above, `:photos` validation allows any number of photos to be upload, each one being 5 MB or less in size.
+
+When declaring `size_range`, you might want to assign the values of the ranges into variables for passing rubocop linters, to create [an unambiguous range](https://github.com/rubocop/rubocop/blob/master/lib/rubocop/cop/lint/ambiguous_range.rb).
+
+```ruby
+class User < ApplicationRecord
+  has_many_attached :photos
+  
+  @min_size = 1.megabytes
+  @max_size = 5.megabytes
+  
+  validates :photos, presence: true, blob: {
+    content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+    size_range: @min_size..@max_size
+  }
+end
+```
 
 ## Contributing
 
