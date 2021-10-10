@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## 0.1.5
+
+- Add French locale (#24)
+
 ## 0.1.4
 
 - Updated test environment to rails 6.0.0
