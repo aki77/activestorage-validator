@@ -22,8 +22,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [2.7, 3.0]
-        gemfile: [rails60, rails61]
+        ruby: [2.7, '3.0', 3.1]
+        gemfile: [rails60, rails61, rails70]
+        exclude:
+          - ruby: 3.1
+            gemfile: rails60
     steps:
       - name: Install packages
         run: |
