@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## 0.2.1
+
+- Add spanish locale (#28)
+
 ## 0.2.0
 
 - Drop support for rails 5.2
