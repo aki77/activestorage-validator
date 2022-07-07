@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## 0.2.2
+
+- Add polish locale (#29)
+
 ## 0.2.1
 
 - Add spanish locale (#28)
