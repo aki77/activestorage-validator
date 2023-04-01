@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## 0.3.0
+
+- Drop support for rails 6.0
+
 ## 0.2.2
 
 - Add polish locale (#29)
