@@ -29,6 +29,8 @@ module ActiveRecord
             options[:content_type].match?(blob.content_type)
           when Array
             options[:content_type].include?(blob.content_type)
+          when :web_image
+            ActiveStorage.web_image_content_types.include?(blob.content_type)
           when Symbol
             blob.public_send("#{options[:content_type]}?")
           else

@@ -71,6 +71,15 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
       it { expect(User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')]).valid?).to eq false }
     end
 
+    context ':web_image' do
+      before do
+        User.validates :file, blob: { content_type: :web_image }
+      end
+
+      it { expect(User.new(file: create_file_blob(filename: '600KB.jpg')).valid?).to eq true }
+      it { expect(User.new(file: create_file_blob(filename: 'sample.tiff', content_type: 'image/tiff')).valid?).to eq false }
+    end
+
     context 'symbol' do
       before do
         User.validates :file, blob: { content_type: :image }

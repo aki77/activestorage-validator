@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## 0.4.0
+
+- Add `content_type: :web_image` options
+
 ## 0.3.0
 
 - Drop support for rails 6.0
