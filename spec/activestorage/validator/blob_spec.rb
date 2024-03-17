@@ -42,6 +42,17 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
         expect(user.errors.messages[:file][0]).to eq 'File size should be less than 1 MB'
       end
     end
+
+    context 'when size_range is a proc' do
+      let(:size_range_proc) { -> { 1..1.megabyte } }
+
+      before do
+        User.validates :file, blob: { size_range: size_range_proc }
+        User.validates :files, blob: { size_range: size_range_proc }
+      end
+
+      it { expect(User.new(file: create_file_blob(filename: '600KB.jpg')).valid?).to eq true }
+    end
   end
 
   describe 'with content_type option' do
@@ -104,6 +115,18 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
 
       it { expect(User.new(files: [create_file_blob(filename: '600KB.jpg')]).valid?).to eq true }
       it { expect(User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')]).valid?).to eq false }
+    end
+
+    context 'Proc' do
+      let(:content_type_proc) { -> { Array.wrap('image/jpeg') } }
+
+      before do
+        User.validates :file, blob: { content_type: content_type_proc }
+        User.validates :files, blob: { content_type: content_type_proc }
+      end
+
+      it { expect(User.new(file: create_file_blob(filename: '600KB.jpg')).valid?).to eq true }
+      it { expect(User.new(file: create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')).valid?).to eq false }
     end
   end
 end
