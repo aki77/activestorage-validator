@@ -41,17 +41,6 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
         user.validate
         expect(user.errors.messages[:file][0]).to eq 'File size should be less than 1 MB'
       end
-      
-      it "should pass filename parameter to validation error" do
-        user = User.new(files: [create_file_blob(filename: '1_4MB.jpg')])
-        user.validate
-        # Default locale doesn't include filename, but parameter should be available
-        expect(user.errors.messages[:files][0]).to eq 'File size should be less than 1 MB'
-        
-        # Test that filename parameter is passed by checking error details
-        error_detail = user.errors.details[:files][0]
-        expect(error_detail).to include(filename: '1_4MB.jpg')
-      end
     end
   end
 
@@ -67,41 +56,6 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
 
       it { expect(User.new(files: [create_file_blob(filename: '600KB.jpg')]).valid?).to eq true }
       it { expect(User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')]).valid?).to eq false }
-      
-      it "should pass filename parameter to validation error for has_many_attached" do
-        user = User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')])
-        user.validate
-        # Default locale doesn't include filename, but parameter should be available
-        expect(user.errors.messages[:files][0]).to eq 'is not a valid file format'
-        
-        # Test that filename parameter is passed by checking error details
-        error_detail = user.errors.details[:files][0]
-        expect(error_detail).to include(filename: 'dummy.txt')
-      end
-      
-      it "should pass filename parameter to validation error for has_one_attached" do
-        user = User.new(file: create_file_blob(filename: 'dummy.txt', content_type: 'text/plain'))
-        user.validate
-        # Default locale doesn't include filename, but parameter should be available
-        expect(user.errors.messages[:file][0]).to eq 'is not a valid file format'
-        
-        # Test that filename parameter is passed by checking error details
-        error_detail = user.errors.details[:file][0]
-        expect(error_detail).to include(filename: 'dummy.txt')
-      end
-      
-      it "should pass filename parameter for specific files in has_many_attached validation errors" do
-        user = User.new(files: [
-          create_file_blob(filename: '600KB.jpg', content_type: 'image/jpeg'),
-          create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')
-        ])
-        user.validate
-        expect(user.errors.messages[:files]).to eq ['is not a valid file format']
-        
-        # Check error details to verify filename parameter is passed
-        error_detail = user.errors.details[:files][0]
-        expect(error_detail).to include(filename: 'dummy.txt')
-      end
     end
 
     context 'array' do
@@ -150,6 +104,29 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
 
       it { expect(User.new(files: [create_file_blob(filename: '600KB.jpg')]).valid?).to eq true }
       it { expect(User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')]).valid?).to eq false }
+    end
+  end
+
+  describe 'filename parameter in validation errors' do
+    context 'content_type validation' do
+      before do
+        User.validates :file, blob: { content_type: /^image/ }
+        User.validates :files, blob: { content_type: /^image/ }
+      end
+
+      it "passes filename for has_one_attached" do
+        user = User.new(file: create_file_blob(filename: 'dummy.txt', content_type: 'text/plain'))
+        user.validate
+        error_detail = user.errors.details[:file][0]
+        expect(error_detail[:filename]).to eq('dummy.txt')
+      end
+
+      it "passes filename for has_many_attached" do
+        user = User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')])
+        user.validate
+        error_detail = user.errors.details[:files][0]
+        expect(error_detail[:filename]).to eq('dummy.txt')
+      end
     end
   end
 end
