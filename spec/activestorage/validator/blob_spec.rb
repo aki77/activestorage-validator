@@ -106,4 +106,27 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
       it { expect(User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')]).valid?).to eq false }
     end
   end
+
+  describe 'filename parameter in validation errors' do
+    context 'content_type validation' do
+      before do
+        User.validates :file, blob: { content_type: /^image/ }
+        User.validates :files, blob: { content_type: /^image/ }
+      end
+
+      it "passes filename for has_one_attached" do
+        user = User.new(file: create_file_blob(filename: 'dummy.txt', content_type: 'text/plain'))
+        user.validate
+        error_detail = user.errors.details[:file][0]
+        expect(error_detail[:filename]).to eq('dummy.txt')
+      end
+
+      it "passes filename for has_many_attached" do
+        user = User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')])
+        user.validate
+        error_detail = user.errors.details[:files][0]
+        expect(error_detail[:filename]).to eq('dummy.txt')
+      end
+    end
+  end
 end
