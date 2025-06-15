@@ -3,8 +3,5 @@ ja:
     errors:
       messages:
         content_type: "のファイル形式が不正です。"
-        content_type_with_filename: "%{filename}のファイル形式が不正です。"
         min_size_error: "を%{min_size}以上のサイズにしてください。"
-        min_size_error_with_filename: "%{filename}を%{min_size}以上のサイズにしてください。"
         max_size_error: "を%{max_size}以下のサイズにしてください。"
-        max_size_error_with_filename: "%{filename}を%{max_size}以下のサイズにしてください。"

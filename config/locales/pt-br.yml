@@ -3,8 +3,5 @@ pt-br:
     errors:
       messages:
         content_type: "não é um formato válido"
-        content_type_with_filename: "%{filename} não é um formato válido"
         min_size_error: "tamanho do arquivo deve ser maior que %{min_size}"
-        min_size_error_with_filename: "tamanho do arquivo %{filename} deve ser maior que %{min_size}"
         max_size_error: "tamanho do arquivo deve ser menor que %{max_size}"
-        max_size_error_with_filename: "tamanho do arquivo %{filename} deve ser menor que %{max_size}"
