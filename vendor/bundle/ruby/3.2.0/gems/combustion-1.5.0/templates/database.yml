@@ -1,3 +1,0 @@
-test:
-  adapter:  <%= "jdbc" if defined? JRUBY_VERSION %>sqlite3
-  database: db/combustion_test.sqlite

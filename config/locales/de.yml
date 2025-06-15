@@ -3,5 +3,8 @@ de:
     errors:
       messages:
         content_type: "ist kein gültiges Dateiformat"
+        content_type_with_filename: "%{filename} ist kein gültiges Dateiformat"
         min_size_error: "Dateigröße sollte weniger als %{min_size} betragen"
+        min_size_error_with_filename: "%{filename} Dateigröße sollte weniger als %{min_size} betragen"
         max_size_error: "Dateigröße sollte weniger als %{max_size} betragen"
+        max_size_error_with_filename: "%{filename} Dateigröße sollte weniger als %{max_size} betragen"

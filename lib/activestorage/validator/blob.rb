@@ -7,14 +7,14 @@ module ActiveRecord
         Array(values).each do |value|
           if options[:size_range].present?
             if options[:size_range].min > value.blob.byte_size
-              record.errors.add(attribute, :min_size_error, min_size: ActiveSupport::NumberHelper.number_to_human_size(options[:size_range].min))
+              record.errors.add(attribute, :min_size_error_with_filename, min_size: ActiveSupport::NumberHelper.number_to_human_size(options[:size_range].min), filename: value.blob.filename)
             elsif options[:size_range].max < value.blob.byte_size
-              record.errors.add(attribute, :max_size_error, max_size: ActiveSupport::NumberHelper.number_to_human_size(options[:size_range].max))
+              record.errors.add(attribute, :max_size_error_with_filename, max_size: ActiveSupport::NumberHelper.number_to_human_size(options[:size_range].max), filename: value.blob.filename)
             end
           end
 
           unless valid_content_type?(value.blob)
-            record.errors.add(attribute, :content_type)
+            record.errors.add(attribute, :content_type_with_filename, filename: value.blob.filename)
           end
         end
       end

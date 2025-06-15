@@ -3,5 +3,8 @@ pl:
     errors:
       messages:
         content_type: "ma nieprawidłowy format"
+        content_type_with_filename: "%{filename} ma nieprawidłowy format"
         min_size_error: "Rozmiar pliku nie może być większy niż %{min_size}"
+        min_size_error_with_filename: "Rozmiar pliku %{filename} nie może być większy niż %{min_size}"
         max_size_error: "Rozmiar pliku nie może być mniejszy niż %{max_size}"
+        max_size_error_with_filename: "Rozmiar pliku %{filename} nie może być mniejszy niż %{max_size}"

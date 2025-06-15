@@ -39,7 +39,19 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
       it "should translate the validation error according to it's locale" do
         user = User.new(file: create_file_blob(filename: '1_4MB.jpg'))
         user.validate
-        expect(user.errors.messages[:file][0]).to eq 'File size should be less than 1 MB'
+        expect(user.errors.messages[:file][0]).to eq '1_4MB.jpg file size should be less than 1 MB'
+      end
+      
+      it "should include filename in error message for has_many_attached" do
+        user = User.new(files: [create_file_blob(filename: '1_4MB.jpg')])
+        user.validate
+        expect(user.errors.messages[:files][0]).to include('1_4MB.jpg')
+      end
+      
+      it "should include filename in error message for has_one_attached" do
+        user = User.new(file: create_file_blob(filename: '1_4MB.jpg'))
+        user.validate
+        expect(user.errors.messages[:file][0]).to include('1_4MB.jpg')
       end
     end
   end
@@ -56,6 +68,28 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
 
       it { expect(User.new(files: [create_file_blob(filename: '600KB.jpg')]).valid?).to eq true }
       it { expect(User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')]).valid?).to eq false }
+      
+      it "should include filename in error message for has_many_attached" do
+        user = User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')])
+        user.validate
+        expect(user.errors.messages[:files][0]).to include('dummy.txt')
+      end
+      
+      it "should include filename in error message for has_one_attached" do
+        user = User.new(file: create_file_blob(filename: 'dummy.txt', content_type: 'text/plain'))
+        user.validate
+        expect(user.errors.messages[:file][0]).to include('dummy.txt')
+      end
+      
+      it "should identify specific files in has_many_attached validation errors" do
+        user = User.new(files: [
+          create_file_blob(filename: '600KB.jpg', content_type: 'image/jpeg'),
+          create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')
+        ])
+        user.validate
+        expect(user.errors.messages[:files]).to include('dummy.txt is not a valid file format')
+        expect(user.errors.messages[:files]).not_to include(a_string_matching(/600KB\.jpg/))
+      end
     end
 
     context 'array' do
