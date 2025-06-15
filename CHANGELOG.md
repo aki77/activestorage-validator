@@ -1,3 +1,7 @@
+# Changelog
+
+For changelogs from version 0.5.0 onwards, please see the [GitHub Releases page](https://github.com/aki77/activestorage-validator/releases).
+
 ## [Unreleased]
 
 ## 0.4.0
