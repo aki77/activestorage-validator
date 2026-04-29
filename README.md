@@ -43,6 +43,9 @@ class User < ApplicationRecord
 
   # You can also use a regular expression for content_type
   # validates :photos, blob: { content_type: %r{^image/}, size_range: 1..(5.megabytes) }
+
+  # Require the filename to have one of the allowed extensions
+  # validates :audio, blob: { content_type: "audio/mpeg", extension: %w[mp3] }
 end
 ```
 
@@ -54,6 +57,7 @@ end
 |--------------|---------------------------------------------------------------------------------------------|
 | content_type | Allowed MIME types. Accepts a symbol (`:web_image`, `:image`, `:audio`, `:video`, `:text`), an array of MIME types, a regular expression, or a string (single MIME type). |
 | size_range   | Allowed file size range (e.g. `1..5.megabytes`)                                             |
+| extension    | Allowed file extensions. Accepts a String or an Array of Strings. Case-insensitive, leading dot optional. Files without an extension are rejected. |
 
 ### content_type Examples
 
@@ -67,6 +71,17 @@ end
 - **String**
   - `"application/pdf"` ... Only allow PDF files
 
+### extension Examples
+
+- **String**
+  - `extension: "mp3"` ... Only allow `.mp3` files
+- **Array**
+  - `extension: %w[mp3 m4a]` ... Allow either `.mp3` or `.m4a`
+- **Combined with content_type (AND)**
+  - `blob: { content_type: "audio/mpeg", extension: %w[mp3] }` ... Reject both `my_podcast` (no extension) and `my_podcast.wav` (wrong extension), even when their MIME types match.
+
+The leading dot is optional (`"mp3"` and `".mp3"` behave the same), and matching is case-insensitive (`PHOTO.JPG` matches `extension: "jpg"`).
+
 ## I18n Error Message Options
 
 Validation error messages are I18n compatible. The following interpolation keys are available in your translation files, according to the validator's implementation:
@@ -76,12 +91,14 @@ Validation error messages are I18n compatible. The following interpolation keys 
 | filename       | The uploaded file's name                    |
 | min_size       | The minimum allowed file size (humanized)   |
 | max_size       | The maximum allowed file size (humanized)   |
+| extension      | The list of allowed extensions, joined by `, ` |
 
 The following error types are used:
 
 - `content_type` (invalid content type)
 - `min_size_error` (file is too small)
 - `max_size_error` (file is too large)
+- `extension` (invalid file extension)
 
 Example (config/locales/en.yml):
 
@@ -92,6 +109,7 @@ en:
       content_type: "%{filename} has an invalid content type"
       min_size_error: "%{filename} is too small (minimum is %{min_size})"
       max_size_error: "%{filename} is too large (maximum is %{max_size})"
+      extension: "%{filename} has an invalid file extension (allowed: %{extension})"
 ```
 
 ## Notes
