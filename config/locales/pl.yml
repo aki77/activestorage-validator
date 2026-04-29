@@ -5,3 +5,4 @@ pl:
         content_type: "ma nieprawidłowy format"
         min_size_error: "Rozmiar pliku nie może być większy niż %{min_size}"
         max_size_error: "Rozmiar pliku nie może być mniejszy niż %{max_size}"
+        extension: "ma nieprawidłowe rozszerzenie pliku (dozwolone: %{extension})"

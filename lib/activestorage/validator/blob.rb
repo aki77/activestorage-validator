@@ -16,6 +16,15 @@ module ActiveRecord
           unless valid_content_type?(value.blob)
             record.errors.add(attribute, :content_type, filename: value.blob.filename.to_s)
           end
+
+          unless valid_extension?(value.blob)
+            record.errors.add(
+              attribute,
+              :extension,
+              filename: value.blob.filename.to_s,
+              extension: Array(options[:extension]).map { |e| normalize_extension(e) }.join(', ')
+            )
+          end
         end
       end
 
@@ -36,6 +45,20 @@ module ActiveRecord
           else
             options[:content_type] == blob.content_type
           end
+        end
+
+        def valid_extension?(blob)
+          return true if options[:extension].nil?
+
+          allowed = Array(options[:extension]).map { |e| normalize_extension(e) }
+          actual = normalize_extension(blob.filename.extension)
+          return false if actual.empty?
+
+          allowed.include?(actual)
+        end
+
+        def normalize_extension(value)
+          value.to_s.downcase.delete_prefix('.')
         end
     end
   end

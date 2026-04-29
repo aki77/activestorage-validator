@@ -5,3 +5,4 @@ ja:
         content_type: "のファイル形式が不正です。"
         min_size_error: "を%{min_size}以上のサイズにしてください。"
         max_size_error: "を%{max_size}以下のサイズにしてください。"
+        extension: "のファイル拡張子が不正です（許可: %{extension}）。"

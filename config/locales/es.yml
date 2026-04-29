@@ -5,3 +5,4 @@ es:
         content_type: "no es un formato válido"
         min_size_error: "tamaño de archivo debe ser mayor a %{min_size}"
         max_size_error: "tamaño de archivo debe ser menor a %{max_size}"
+        extension: "tiene una extensión de archivo no válida (permitidas: %{extension})"

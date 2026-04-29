@@ -107,6 +107,70 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
     end
   end
 
+  describe 'with extension option' do
+    context 'string' do
+      before do
+        User.validates :file, blob: { extension: 'jpg' }
+        User.validates :files, blob: { extension: 'jpg' }
+      end
+
+      it { expect(User.new(file: create_file_blob(filename: '600KB.jpg')).valid?).to eq true }
+      it { expect(User.new(file: create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')).valid?).to eq false }
+
+      it { expect(User.new(files: [create_file_blob(filename: '600KB.jpg')]).valid?).to eq true }
+      it { expect(User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')]).valid?).to eq false }
+    end
+
+    context 'array' do
+      before do
+        User.validates :file, blob: { extension: %w[jpg png] }
+        User.validates :files, blob: { extension: %w[jpg png] }
+      end
+
+      it { expect(User.new(file: create_file_blob(filename: '600KB.jpg')).valid?).to eq true }
+      it { expect(User.new(file: create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')).valid?).to eq false }
+
+      it { expect(User.new(files: [create_file_blob(filename: '600KB.jpg')]).valid?).to eq true }
+      it { expect(User.new(files: [create_file_blob(filename: 'dummy.txt', content_type: 'text/plain')]).valid?).to eq false }
+    end
+
+    context 'case insensitive' do
+      before do
+        User.validates :file, blob: { extension: 'jpg' }
+      end
+
+      it { expect(User.new(file: create_file_blob(filename: 'UPPERCASE.JPG')).valid?).to eq true }
+    end
+
+    context 'leading dot in option' do
+      before do
+        User.validates :file, blob: { extension: '.jpg' }
+      end
+
+      it { expect(User.new(file: create_file_blob(filename: '600KB.jpg')).valid?).to eq true }
+    end
+
+    context 'file without extension' do
+      before do
+        User.validates :file, blob: { extension: 'jpg' }
+      end
+
+      it { expect(User.new(file: create_file_blob(filename: 'no_extension')).valid?).to eq false }
+    end
+
+    context 'combined with content_type (AND)' do
+      before do
+        User.validates :file, blob: { content_type: 'image/jpeg', extension: %w[jpg jpeg] }
+      end
+
+      it 'rejects file when filename has no extension even if content_type matches' do
+        user = User.new(file: create_file_blob(filename: 'no_extension'))
+        expect(user.valid?).to eq false
+        expect(user.errors.details[:file].map { |d| d[:error] }).to include(:extension)
+      end
+    end
+  end
+
   describe 'filename parameter in validation errors' do
     context 'content_type validation' do
       before do
@@ -126,6 +190,26 @@ RSpec.describe ActiveRecord::Validations::BlobValidator do
         user.validate
         error_detail = user.errors.details[:files][0]
         expect(error_detail[:filename]).to eq('dummy.txt')
+      end
+    end
+
+    context 'extension validation' do
+      before do
+        User.validates :file, blob: { extension: %w[jpg png] }
+      end
+
+      it 'passes filename and allowed extensions' do
+        user = User.new(file: create_file_blob(filename: 'dummy.txt', content_type: 'text/plain'))
+        user.validate
+        error_detail = user.errors.details[:file][0]
+        expect(error_detail[:filename]).to eq('dummy.txt')
+        expect(error_detail[:extension]).to eq('jpg, png')
+      end
+
+      it 'translates the validation error according to its locale' do
+        user = User.new(file: create_file_blob(filename: 'dummy.txt', content_type: 'text/plain'))
+        user.validate
+        expect(user.errors.messages[:file][0]).to eq 'has an invalid file extension (allowed: jpg, png)'
       end
     end
   end
