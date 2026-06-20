@@ -23,21 +23,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { ruby: "3.0", gemfile: "rails61" }
-          - { ruby: "3.1", gemfile: "rails61" }
-          - { ruby: "3.2", gemfile: "rails61" }
-          - { ruby: "3.0", gemfile: "rails70" }
-          - { ruby: "3.1", gemfile: "rails70" }
-          - { ruby: "3.2", gemfile: "rails70" }
-          - { ruby: "3.0", gemfile: "rails71" }
-          - { ruby: "3.1", gemfile: "rails71" }
-          - { ruby: "3.2", gemfile: "rails71" }
-          - { ruby: "3.2", gemfile: "rails72" }
           - { ruby: "3.3", gemfile: "rails72" }
           - { ruby: "3.4", gemfile: "rails72" }
-          - { ruby: "3.2", gemfile: "rails80" }
+          - { ruby: "4.0", gemfile: "rails72" }
           - { ruby: "3.3", gemfile: "rails80" }
           - { ruby: "3.4", gemfile: "rails80" }
+          - { ruby: "4.0", gemfile: "rails80" }
+          - { ruby: "3.3", gemfile: "rails81" }
+          - { ruby: "3.4", gemfile: "rails81" }
+          - { ruby: "4.0", gemfile: "rails81" }
     steps:
       - name: Install packages
         run: |
