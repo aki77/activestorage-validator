@@ -55,9 +55,9 @@ end
 
 | Option        | Description                                                                                 |
 |--------------|---------------------------------------------------------------------------------------------|
-| content_type | Allowed MIME types. Accepts a symbol (`:web_image`, `:image`, `:audio`, `:video`, `:text`), an array of MIME types, a regular expression, or a string (single MIME type). |
-| size_range   | Allowed file size range (e.g. `1..5.megabytes`)                                             |
-| extension    | Allowed file extensions. Accepts a String or an Array of Strings. Case-insensitive, leading dot optional. Files without an extension are rejected. |
+| content_type | Allowed MIME types. Accepts a symbol (`:web_image`, `:image`, `:audio`, `:video`, `:text`), an array of MIME types, a regular expression, or a string (single MIME type). Or a Proc/lambda returning one of the above. |
+| size_range   | Allowed file size range (e.g. `1..5.megabytes`). Or a Proc/lambda returning a Range.        |
+| extension    | Allowed file extensions. Accepts a String or an Array of Strings. Case-insensitive, leading dot optional. Files without an extension are rejected. Or a Proc/lambda returning one of the above. |
 
 ### content_type Examples
 
@@ -81,6 +81,29 @@ end
   - `blob: { content_type: "audio/mpeg", extension: %w[mp3] }` ... Reject both `my_podcast` (no extension) and `my_podcast.wav` (wrong extension), even when their MIME types match.
 
 The leading dot is optional (`"mp3"` and `".mp3"` behave the same), and matching is case-insensitive (`PHOTO.JPG` matches `extension: "jpg"`).
+
+## Dynamic Options (Proc/lambda)
+
+Every option (`content_type`, `size_range`, `extension`) also accepts a Proc/lambda,
+so you can decide the allowed values per record at validation time:
+
+```ruby
+validates :avatar, blob: {
+  content_type: ->(record) { record.premium? ? %w[image/png image/jpeg] : :web_image },
+  size_range:   ->(record) { 1..(record.premium? ? 20.megabytes : 5.megabytes) }
+}
+```
+
+The Proc is resolved with the same arity convention as Rails' built-in validators
+(the same rule used by `if:` / `unless:`):
+
+- **No argument** (`-> { ... }`) — called as-is.
+- **One argument** (`->(record) { ... }`) — the record is passed in.
+
+The Proc must return a value of one of the types the option already accepts
+(a Symbol/Array/Regexp/String for `content_type`, a Range for `size_range`, a
+String/Array for `extension`). For `has_many_attached`, the Proc is evaluated
+once per record (not per attached file).
 
 ## I18n Error Message Options
 

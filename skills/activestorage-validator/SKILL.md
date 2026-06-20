@@ -54,9 +54,15 @@ end
 
 | Option | Accepts | Notes |
 | --- | --- | --- |
-| `content_type` | Symbol / Array / Regexp / String | Allowed MIME type(s). See matching below. |
-| `size_range` | Range | Allowed byte size, e.g. `1..(5.megabytes)`. |
-| `extension` | String / Array | Allowed filename extension(s). |
+| `content_type` | Symbol / Array / Regexp / String / Proc | Allowed MIME type(s). See matching below. |
+| `size_range` | Range / Proc | Allowed byte size, e.g. `1..(5.megabytes)`. |
+| `extension` | String / Array / Proc | Allowed filename extension(s). |
+
+Any option also accepts a **Proc/lambda** returning a value of the listed type,
+resolved with the same arity convention as Rails' built-in validators (`if:` /
+`unless:`): `-> { ... }` is called as-is, `->(record) { ... }` receives the
+record. For `has_many_attached` the Proc is evaluated once per record. Example:
+`content_type: ->(record) { record.premium? ? %w[image/png] : :web_image }`.
 
 ### `content_type` matching
 
