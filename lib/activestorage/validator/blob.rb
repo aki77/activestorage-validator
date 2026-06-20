@@ -4,25 +4,23 @@ module ActiveRecord
       def validate_each(record, attribute, values) # rubocop:disable Metrics/AbcSize
         return unless values.attached?
 
-        Array(values).each do |value|
-          if options[:size_range].present?
-            if options[:size_range].min > value.blob.byte_size
-              record.errors.add(attribute, :min_size_error, min_size: ActiveSupport::NumberHelper.number_to_human_size(options[:size_range].min), filename: value.blob.filename.to_s)
-            elsif options[:size_range].max < value.blob.byte_size
-              record.errors.add(attribute, :max_size_error, max_size: ActiveSupport::NumberHelper.number_to_human_size(options[:size_range].max), filename: value.blob.filename.to_s)
-            end
-          end
+        size_range   = resolve_option(record, options[:size_range])
+        content_type = resolve_option(record, options[:content_type])
+        extension    = resolve_option(record, options[:extension])
 
-          unless valid_content_type?(value.blob)
+        Array(values).each do |value|
+          validate_size(record, attribute, value, size_range) if size_range.present?
+
+          unless valid_content_type?(value.blob, content_type)
             record.errors.add(attribute, :content_type, filename: value.blob.filename.to_s)
           end
 
-          unless valid_extension?(value.blob)
+          unless valid_extension?(value.blob, extension)
             record.errors.add(
               attribute,
               :extension,
               filename: value.blob.filename.to_s,
-              extension: Array(options[:extension]).map { |e| normalize_extension(e) }.join(', ')
+              extension: Array(extension).map { |e| normalize_extension(e) }.join(', ')
             )
           end
         end
@@ -30,27 +28,46 @@ module ActiveRecord
 
       private
 
-        def valid_content_type?(blob)
-          return true if options[:content_type].nil?
+        # Resolve only when the value is a Proc, using the same arity convention
+        # as Rails' built-in validators: arity 0 calls the proc as-is, otherwise
+        # the record is passed in. Anything else (Symbol/String/Array/Regexp/
+        # Range/nil) is returned untouched, preserving backward compatibility.
+        def resolve_option(record, value)
+          return value unless value.is_a?(Proc)
 
-          case options[:content_type]
-          when Regexp
-            options[:content_type].match?(blob.content_type)
-          when Array
-            options[:content_type].include?(blob.content_type)
-          when :web_image
-            ActiveStorage.web_image_content_types.include?(blob.content_type)
-          when Symbol
-            blob.public_send("#{options[:content_type]}?")
-          else
-            options[:content_type] == blob.content_type
+          value.arity.zero? ? value.call : value.call(record)
+        end
+
+        def validate_size(record, attribute, value, size_range)
+          byte_size = value.blob.byte_size
+          if size_range.min > byte_size
+            record.errors.add(attribute, :min_size_error, min_size: ActiveSupport::NumberHelper.number_to_human_size(size_range.min), filename: value.blob.filename.to_s)
+          elsif size_range.max < byte_size
+            record.errors.add(attribute, :max_size_error, max_size: ActiveSupport::NumberHelper.number_to_human_size(size_range.max), filename: value.blob.filename.to_s)
           end
         end
 
-        def valid_extension?(blob)
-          return true if options[:extension].nil?
+        def valid_content_type?(blob, content_type)
+          return true if content_type.nil?
 
-          allowed = Array(options[:extension]).map { |e| normalize_extension(e) }
+          case content_type
+          when Regexp
+            content_type.match?(blob.content_type)
+          when Array
+            content_type.include?(blob.content_type)
+          when :web_image
+            ActiveStorage.web_image_content_types.include?(blob.content_type)
+          when Symbol
+            blob.public_send("#{content_type}?")
+          else
+            content_type == blob.content_type
+          end
+        end
+
+        def valid_extension?(blob, extension)
+          return true if extension.nil?
+
+          allowed = Array(extension).map { |e| normalize_extension(e) }
           actual = normalize_extension(blob.filename.extension)
           return false if actual.empty?
 

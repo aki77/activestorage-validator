@@ -52,9 +52,15 @@ end
 
 | オプション | 受け付ける型 | 備考 |
 | --- | --- | --- |
-| `content_type` | Symbol / Array / Regexp / String | 許可する MIME タイプ。マッチ方法は下記。 |
-| `size_range` | Range | 許可するバイトサイズ。例 `1..(5.megabytes)`。 |
-| `extension` | String / Array | 許可するファイル拡張子。 |
+| `content_type` | Symbol / Array / Regexp / String / Proc | 許可する MIME タイプ。マッチ方法は下記。 |
+| `size_range` | Range / Proc | 許可するバイトサイズ。例 `1..(5.megabytes)`。 |
+| `extension` | String / Array / Proc | 許可するファイル拡張子。 |
+
+いずれのオプションも、記載の型を返す **Proc/lambda** を受け付ける。解決は Rails 標準
+バリデータ（`if:` / `unless:`）と同じ arity 規約: `-> { ... }` はそのまま呼び、
+`->(record) { ... }` には record が渡される。`has_many_attached` では Proc は record
+ごとに1回評価される。例:
+`content_type: ->(record) { record.premium? ? %w[image/png] : :web_image }`。
 
 ### `content_type` のマッチ
 
