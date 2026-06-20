@@ -14,3 +14,4 @@
 gemfiles/*.lock
 *.sqlite
 Gemfile.local
+CLAUDE.local.md
